@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
+
 public class DungeonGenerator : MonoBehaviour
 {
     List<RectInt> rooms = new List<RectInt>();
@@ -10,11 +12,18 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] int dungeonWidth;
     [SerializeField] int maxRoomAmount;
     [SerializeField] int minRoomSize;
+    [SerializeField] int RandomSeed;
     //[SerializeField] int maxRoomsize;
     bool allRoomsGenerated;
 
+    private IEnumerator coroutine;
+    private bool coroutineBool;
     void Start()
     {
+        //coroutine = GenerateOnDelay(2f);
+        Random.InitState(RandomSeed);
+        rooms.Add(new RectInt(new Vector2Int(0,0), new Vector2Int(dungeonWidth, dungeonHeight)));
+        //StartCoroutine(coroutine);
         GenerateDungeon();
         //AlgorithmsUtils.DebugRectInt(dungeon, Color.blue, 100f);
     }
@@ -27,69 +36,49 @@ public class DungeonGenerator : MonoBehaviour
 
     void GenerateDungeon()
     {
-        //outline
-        rooms.Add(new RectInt(new Vector2Int(0, 0), new Vector2Int(dungeonWidth, dungeonHeight)));
-
-        while (!allRoomsGenerated)
-        {
-            for (int i = 0; i < rooms.Count; i++)
+        
+       for (int i = rooms.Count - 1; i >= 0; i--)
+       {
+            if (rooms.Count == maxRoomAmount)
             {
-                
-                int xOffset = 0;
-                int yOffset = 0;
-
-                RectInt room = rooms[i];
-                Debug.Log("current " + room.ToString());
-
-                if (room.height <= room.width && room.width > minRoomSize * 2 + 1)
-                {
-                    xOffset = Random.Range(minRoomSize, room.width - minRoomSize);
-
-                    room.width -= xOffset;
-
-                    rooms.Add(new RectInt(new Vector2Int((room.x + room.width) - 1, room.y), new Vector2Int(xOffset + 1, room.height)));
-                }
-                else if (room.height > minRoomSize * 2 + 1)
-                {
-                    yOffset = Random.Range(minRoomSize, room.height - minRoomSize);
-
-                    room.height -= yOffset;
-                    rooms.Add(new RectInt(new Vector2Int(room.x, (room.y + room.height) - 1), new Vector2Int(room.width, yOffset + 1)));
-                }
-                //if (rooms.Count >= maxRoomAmount)
-                //{
-                //    break;
-                //}
+                print("maxxed");
+                return;
             }
 
-            allRoomsGenerated = true;
+            if (rooms[i].width < minRoomSize && rooms[i].height < minRoomSize)
+                continue;
 
-            //if (rooms.Count >= maxRoomAmount)
-            //{
-            //    break;
-            //}
+            RectInt newRoom = new RectInt(Vector2Int.zero, Vector2Int.zero);
+            print("made Room");
+            newRoom.x = rooms[i].x;
+            newRoom.y = rooms[i].y;
 
-            for (int j = 0; j < rooms.Count; j++)
+            if (rooms[i].width < rooms[i].height)
             {
-                if (rooms[j].height > minRoomSize * 2 + 1 || rooms[j].width > minRoomSize * 2 + 1)
-                {
-                    allRoomsGenerated = false;
-                    break;
-                }
+                newRoom.width = rooms[i].width;
+                newRoom.height = Random.Range(minRoomSize / 2, rooms[i].height - minRoomSize / 2);
+                rooms[i] = new RectInt(new Vector2Int(rooms[i].x, rooms[i].y + newRoom.height), new Vector2Int(rooms[i].width, rooms[i].height - newRoom.height));
+            }
+            else
+            {
+                newRoom.height = rooms[i].height;
+                newRoom.width = Random.Range(minRoomSize / 2, rooms[i].width - minRoomSize / 2);
+                rooms[i] = new RectInt(new Vector2Int(rooms[i].x + newRoom.width, rooms[i].y), new Vector2Int(rooms[i].width - newRoom.width, rooms[i].height));
             }
 
-
-        }
-        allRoomsGenerated = true;
-        return;
+            rooms.Add(newRoom);
+       }
+       
+        GenerateDungeon();
     }
+
 
 
     void DrawRooms()
     {
         for(int i = 0; i < rooms.Count; i++)
         {
-            AlgorithmsUtils.DebugRectInt(rooms[i], Color.blue);
+            AlgorithmsUtils.DebugRectInt(rooms[i], Color.gray);
         }
     }
 }

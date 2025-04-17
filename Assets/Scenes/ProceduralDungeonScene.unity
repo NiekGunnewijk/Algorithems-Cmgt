@@ -408,8 +408,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dungeonHeight: 100
   dungeonWidth: 50
-  maxRoomAmount: 10
+  maxRoomAmount: 3
   minRoomSize: 10
+  RandomSeed: 9
 --- !u!4 &708677825
 Transform:
   m_ObjectHideFlags: 0
