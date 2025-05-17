@@ -5,12 +5,13 @@ public class AlgorithmsUtils
     
     public static bool Intersects(RectInt a, RectInt b)
     {
-        return a.xMin < b.xMax &&
-               a.xMax > b.xMin &&
-               a.yMin < b.yMax &&
-               a.yMax > b.yMin;
+        return a.xMin <= b.xMax &&
+               a.xMax >= b.xMin &&
+               a.yMin <= b.yMax &&
+               a.yMax >= b.yMin;
     }
     
+
     public static RectInt Intersect(RectInt a, RectInt b)
     {
         int x = Mathf.Max(a.xMin, b.xMin);
