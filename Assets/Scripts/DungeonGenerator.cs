@@ -4,8 +4,8 @@ using System.Collections;
 
 public class DungeonGenerator : MonoBehaviour
 {
-    List<RectInt> rooms = new List<RectInt>();
-    List<RectInt> doors = new List<RectInt>();
+    public List<RectInt> rooms = new List<RectInt>();
+    public List<RectInt> doors = new List<RectInt>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] int dungeonHeight;
@@ -14,9 +14,10 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] int minRoomSize;
     [SerializeField] int doorWidth;
     [SerializeField] int RandomSeed;
+    [SerializeField] int GenerationDelay;
     //[SerializeField] int maxRoomsize;
     
-    public bool allRoomsGenerated;
+    bool allRoomsGenerated;
     private IEnumerator roomCoroutine;
     private IEnumerator doorCoroutine;
     private int lastRoomCount;
@@ -93,7 +94,7 @@ public class DungeonGenerator : MonoBehaviour
         while (!allRoomsGenerated)
         {
             GenerateDungeon();
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(GenerationDelay);
         }
         StartCoroutine(doorCoroutine);
     }
@@ -120,7 +121,7 @@ public class DungeonGenerator : MonoBehaviour
                         doors.Add(new RectInt(rooms[n].x, doorY, 0, doorWidth));
                         print(rooms[i]);
                         print(rooms[n]);
-                        yield return new WaitForSeconds(1);
+                        yield return new WaitForSeconds(GenerationDelay);
                     }
                     else if (rooms[i].y + rooms[i].height == rooms[n].y)
                     {
@@ -132,7 +133,7 @@ public class DungeonGenerator : MonoBehaviour
                         doors.Add(new RectInt(doorX, rooms[n].y, doorWidth, 0));
                         print(rooms[i]);
                         print(rooms[n]);
-                        yield return new WaitForSeconds(1);
+                        yield return new WaitForSeconds(GenerationDelay);
                     }
                 }
             }
