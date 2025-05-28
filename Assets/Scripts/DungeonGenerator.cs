@@ -5,28 +5,23 @@ using System.Collections;
 public class DungeonGenerator : MonoBehaviour
 {
     public List<RectInt> rooms = new List<RectInt>();
-    public List<RectInt> doors = new List<RectInt>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] int dungeonHeight;
     [SerializeField] int dungeonWidth;
     [SerializeField] int maxRoomAmount;
     [SerializeField] int minRoomSize;
-    [SerializeField] int doorWidth;
     [SerializeField] int RandomSeed;
     [SerializeField] int GenerationDelay;
-    //[SerializeField] int maxRoomsize;
     
     bool allRoomsGenerated;
     private IEnumerator roomCoroutine;
-    private IEnumerator doorCoroutine;
     private int lastRoomCount;
 
 
     void Start()
     {
         roomCoroutine = Generate();
-        doorCoroutine = PlaceDoors();
         Random.InitState(RandomSeed);
         rooms.Add(new RectInt(new Vector2Int(0,0), new Vector2Int(dungeonWidth, dungeonHeight)));
         StartCoroutine(roomCoroutine);
@@ -37,7 +32,6 @@ public class DungeonGenerator : MonoBehaviour
     private void Update()
     {
         DrawRooms();
-        DrawDoors();
     }
     
 
@@ -77,9 +71,7 @@ public class DungeonGenerator : MonoBehaviour
 
             rooms.Add(newRoom);
        }
-       
-        print("lastroomcount: " + lastRoomCount);
-        print("roomcount " + rooms.Count);
+
 
         if (lastRoomCount == rooms.Count)
         {
@@ -96,52 +88,6 @@ public class DungeonGenerator : MonoBehaviour
             GenerateDungeon();
             yield return new WaitForSeconds(GenerationDelay);
         }
-        StartCoroutine(doorCoroutine);
-    }
-    IEnumerator PlaceDoors()
-    {
-        for (int i = 0; i <= rooms.Count - 1; i++)
-        {
-            for (int n = 0; n <= rooms.Count - 1; n++)
-            {
-                if (AlgorithmsUtils.Intersects(rooms[i], rooms[n]))
-                {
-                    if (rooms[i].y == rooms[n].y + rooms[n].height || rooms[i].x == rooms[n].x + rooms[n].width)
-                       continue;
-
-                    if (rooms[i].x + rooms[i].width == rooms[n].x)
-                    {
-                        if (rooms[i].y + rooms[i].height == rooms[n].y)
-                            continue;
-
-                        int yMax = Mathf.Max(rooms[i].y, rooms[n].y);
-                        int yMin = Mathf.Min(rooms[i].y + rooms[i].height, rooms[n].y + rooms[n].height);
-
-                        int doorY = Random.Range(yMax + doorWidth / 2, yMin - doorWidth / 2);
-                        doors.Add(new RectInt(rooms[n].x, doorY, 0, doorWidth));
-                        print(rooms[i]);
-                        print(rooms[n]);
-                        yield return new WaitForSeconds(GenerationDelay);
-                    }
-                    else if (rooms[i].y + rooms[i].height == rooms[n].y)
-                    {
-
-                        int xMax = Mathf.Max(rooms[i].x, rooms[n].x);
-                        int xMin = Mathf.Min(rooms[i].x + rooms[i].width, rooms[n].x + rooms[n].width);
-
-                        int doorX = Random.Range(xMax + doorWidth / 2, xMin - doorWidth / 2);
-                        doors.Add(new RectInt(doorX, rooms[n].y, doorWidth, 0));
-                        print(rooms[i]);
-                        print(rooms[n]);
-                        yield return new WaitForSeconds(GenerationDelay);
-                    }
-                }
-            }
-            
-        }
-            
-        print(doors.Count);
-        print(rooms.Count);
     }
     
 
@@ -149,17 +95,10 @@ public class DungeonGenerator : MonoBehaviour
     {
         for(int i = 0; i < rooms.Count; i++)
         {
-            AlgorithmsUtils.DebugRectInt(rooms[i], new Color(rooms[i].width, rooms[i].width, rooms[i].width));
+            AlgorithmsUtils.DebugRectInt(rooms[i], Color.gray);
         }
     }
 
-    void DrawDoors()
-    {
-        for (int i = 0; i < doors.Count; i++)
-        {
-            AlgorithmsUtils.DebugRectInt(doors[i], Color.black);
-        }
-    }
 }
 
 
