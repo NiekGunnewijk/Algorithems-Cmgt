@@ -50,14 +50,20 @@ public class PlaceDoors : MonoBehaviour
 
                     if (rooms[i].x + rooms[i].width == rooms[n].x)
                     {
-                        if (rooms[i].y + rooms[i].height == rooms[n].y)
-                            continue;
+                        //if (rooms[i].y + rooms[i].height == rooms[n].y)
+                        //    continue;
 
                         int yMax = Mathf.Max(rooms[i].y, rooms[n].y);
                         int yMin = Mathf.Min(rooms[i].y + rooms[i].height, rooms[n].y + rooms[n].height);
 
+                        int doorY;
+                        if ((yMin - yMax) < doorWidth)
+                            continue;
+                        if (yMin - yMax == doorWidth)
+                            doorY = yMax;    
+                        else
+                        doorY = UnityEngine.Random.Range(yMax + doorWidth / 2, yMin - doorWidth / 2);
 
-                        int doorY = UnityEngine.Random.Range(yMax + doorWidth / 2, yMin - doorWidth / 2);
                         Doors.Add(new RectInt(rooms[n].x, doorY, 0, doorWidth));
                         
                         yield return new WaitForSeconds(GenerationDelay);
@@ -67,8 +73,14 @@ public class PlaceDoors : MonoBehaviour
 
                         int xMax = Mathf.Max(rooms[i].x, rooms[n].x);
                         int xMin = Mathf.Min(rooms[i].x + rooms[i].width, rooms[n].x + rooms[n].width);
-
-                        int doorX = UnityEngine.Random.Range(xMax + doorWidth / 2, xMin - doorWidth / 2);
+                        int doorX;
+                        if ((xMin - xMax) < doorWidth)
+                            continue;
+                        if (xMin - xMax == doorWidth)
+                            doorX = xMin;
+                        else
+                        doorX = UnityEngine.Random.Range(xMax + doorWidth / 2, xMin - doorWidth / 2);
+                        
                         Doors.Add(new RectInt(doorX, rooms[n].y, doorWidth, 0));
                         
                         yield return new WaitForSeconds(GenerationDelay);

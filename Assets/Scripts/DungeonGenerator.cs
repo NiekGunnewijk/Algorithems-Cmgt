@@ -7,8 +7,8 @@ public class DungeonGenerator : MonoBehaviour
     public List<RectInt> Rooms = new List<RectInt>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    [SerializeField] int dungeonHeight;
-    [SerializeField] int dungeonWidth;
+    public int dungeonHeight;
+    public int dungeonWidth;
     [SerializeField] int maxRoomAmount;
     [SerializeField] int minRoomSize;       // Todo <--------------------------------
     [SerializeField] int RandomSeed;
@@ -36,7 +36,7 @@ public class DungeonGenerator : MonoBehaviour
             if (Rooms.Count == maxRoomAmount)
             {
                 allRoomsGenerated = true;
-                print("maxxed");
+                //print("maxxed");
                 return;
             }
 
@@ -44,7 +44,7 @@ public class DungeonGenerator : MonoBehaviour
                 continue;
 
             RectInt newRoom = new RectInt(Vector2Int.zero, Vector2Int.zero);
-            print("made Room");
+            //print("made Room");
             newRoom.x = Rooms[i].x;
             newRoom.y = Rooms[i].y;
 

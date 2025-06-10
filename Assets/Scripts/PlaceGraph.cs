@@ -6,7 +6,7 @@ public class PlaceGraph : MonoBehaviour
     private DungeonGenerator roomGenerator;
     private PlaceDoors doorGenerator;
 
-    public Graph<Vector2> Graph = new Graph<Vector2>();
+    public Graph<Vector2> Graph = new Graph<Vector2>();         
     private List<RectInt> rooms = new List<RectInt>();
     private List<RectInt> doors = new List<RectInt>();
     
@@ -50,10 +50,15 @@ public class PlaceGraph : MonoBehaviour
             {
                 if (AlgorithmsUtils.Intersects(rooms[i], doors[n]))
                 {
+                    if (doors[n].y < rooms[i].y || doors[n].y > rooms[i].y + rooms[i].height)
+                        continue;
+                    if (doors[n].x < rooms[i].x || doors[n].x > rooms[i].x + rooms[i].width)
+                        continue;
+
                     Vector2 doorNode = new Vector2((doors[n].x + doors[n].width / 2), (doors[n].y + doors[n].height / 2));
                     Graph.AddNode(doorNode);
                     Graph.AddEdge(roomNode, doorNode);
-                }
+                } 
             }
 
         }
