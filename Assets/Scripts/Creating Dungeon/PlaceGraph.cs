@@ -50,6 +50,7 @@ public class PlaceGraph : MonoBehaviour
             {
                 if (AlgorithmsUtils.Intersects(rooms[i], doors[n]))
                 {
+                    // Corner doors
                     if (doors[n].y < rooms[i].y || doors[n].y > rooms[i].y + rooms[i].height)
                         continue;
                     if (doors[n].x < rooms[i].x || doors[n].x > rooms[i].x + rooms[i].width)
@@ -62,8 +63,9 @@ public class PlaceGraph : MonoBehaviour
             }
 
         }
-        
+
+        Graph.BFS(Graph.GetNodes()[1]);
     }
-
-
+    
+    
 }

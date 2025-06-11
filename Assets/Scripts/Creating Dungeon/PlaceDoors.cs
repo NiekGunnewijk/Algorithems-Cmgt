@@ -45,13 +45,15 @@ public class PlaceDoors : MonoBehaviour
             {
                 if (AlgorithmsUtils.Intersects(rooms[i], rooms[n]))
                 {
+                    // stop corner collision
                     if (rooms[i].y == rooms[n].y + rooms[n].height || rooms[i].x == rooms[n].x + rooms[n].width)
                         continue;
 
                     if (rooms[i].x + rooms[i].width == rooms[n].x)
                     {
-                        //if (rooms[i].y + rooms[i].height == rooms[n].y)
-                        //    continue;
+                        //corner collision
+                        if (rooms[i].y + rooms[i].height == rooms[n].y)
+                            continue;
 
                         int yMax = Mathf.Max(rooms[i].y, rooms[n].y);
                         int yMin = Mathf.Min(rooms[i].y + rooms[i].height, rooms[n].y + rooms[n].height);
@@ -68,16 +70,17 @@ public class PlaceDoors : MonoBehaviour
                         
                         yield return new WaitForSeconds(GenerationDelay);
                     }
-                    else if (rooms[i].y + rooms[i].height == rooms[n].y)
+                    else if (rooms[i].y + rooms[i].height == rooms[n].y)        
                     {
 
                         int xMax = Mathf.Max(rooms[i].x, rooms[n].x);
                         int xMin = Mathf.Min(rooms[i].x + rooms[i].width, rooms[n].x + rooms[n].width);
                         int doorX;
+
                         if ((xMin - xMax) < doorWidth)
                             continue;
                         if (xMin - xMax == doorWidth)
-                            doorX = xMin;
+                            doorX = xMax;
                         else
                         doorX = UnityEngine.Random.Range(xMax + doorWidth / 2, xMin - doorWidth / 2);
                         

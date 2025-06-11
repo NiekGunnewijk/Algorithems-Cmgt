@@ -9,30 +9,30 @@ public class Graph<T>
     {
         adjacencyList = new Dictionary<T, List<T>>();
     }
-    
-    public void Clear() 
-    { 
-        adjacencyList.Clear(); 
+
+    public void Clear()
+    {
+        adjacencyList.Clear();
     }
-    
+
     public void RemoveNode(T node)
     {
         if (adjacencyList.ContainsKey(node))
         {
             adjacencyList.Remove(node);
         }
-        
+
         foreach (var key in adjacencyList.Keys)
         {
             adjacencyList[key].Remove(node);
         }
     }
-    
+
     public List<T> GetNodes()
     {
         return new List<T>(adjacencyList.Keys);
     }
-    
+
     public void AddNode(T node)
     {
         if (!adjacencyList.ContainsKey(node))
@@ -53,29 +53,31 @@ public class Graph<T>
         }
     }
 
-    public void AddEdge(T fromNode, T toNode) { 
+    public void AddEdge(T fromNode, T toNode)
+    {
         if (!adjacencyList.ContainsKey(fromNode))
         {
             AddNode(fromNode);
         }
-        if (!adjacencyList.ContainsKey(toNode)) { 
+        if (!adjacencyList.ContainsKey(toNode))
+        {
             AddNode(toNode);
-        } 
-        
-        adjacencyList[fromNode].Add(toNode); 
-        adjacencyList[toNode].Add(fromNode); 
-    } 
-    
-    public List<T> GetNeighbors(T node) 
-    { 
-        return new List<T>(adjacencyList[node]); 
+        }
+
+        adjacencyList[fromNode].Add(toNode);
+        adjacencyList[toNode].Add(fromNode);
+    }
+
+    public List<T> GetNeighbors(T node)
+    {
+        return new List<T>(adjacencyList[node]);
     }
 
     public int GetNodeCount()
     {
         return adjacencyList.Count;
     }
-    
+
     public void PrintGraph()
     {
         foreach (var node in adjacencyList)
@@ -83,11 +85,36 @@ public class Graph<T>
             Debug.Log($"{node.Key}: {string.Join(", ", node.Value)}");
         }
     }
-    
+
     // Breadth-First Search (BFS)
     public void BFS(T startNode)
     {
-        /* */
+        Queue<T> nodeQueue = new Queue<T>();
+        List<T> discoverdNodes = new List<T>();
+
+        nodeQueue.Enqueue(startNode);
+        discoverdNodes.Add(startNode);
+
+        while (nodeQueue.Count != 0)
+        {
+            T node = nodeQueue.Dequeue();
+            foreach (var edge in GetNeighbors(node))
+            {
+                if (!discoverdNodes.Contains(edge))
+                {
+                    discoverdNodes.Add(edge);
+                    nodeQueue.Enqueue(edge);
+                }
+            }
+        }
+
+        if (discoverdNodes.Count == adjacencyList.Count)
+            Debug.Log("All Present Nodes are connected");
+        else
+            Debug.LogWarning("Unconnected Nodes Present");
+
+
+
     }
 
     // Depth-First Search (DFS)

@@ -10,8 +10,6 @@ public class DrawingManager : MonoBehaviour
 
     private List<Vector2> nodeList = new List<Vector2>();
 
-
-
     [SerializeField] bool showRooms = true;
     [SerializeField] bool showDoors = true;
     [SerializeField] bool showNodes = true;
